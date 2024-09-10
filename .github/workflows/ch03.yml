@@ -1,12 +1,17 @@
-name: Environment variables
+name: ch03
 on: push
 jobs:
   run:
     runs-on: ubuntu-latest
     env:
       BRANCH: main
+      USERNAME: ${{ vars.USERNAME }}
+      PASSWORD: ${{ secrets.PASSWORD }}
     steps:
+      # 環境変数の出力
       - run: echo "${BRANCH}"
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.BRANCH }}
+      # リポジトリ変数の出力
+      - run: echo "${USERNAME}"
+      # リポジトリシークレットの出力
+      - run: echo "${PASSWORD}"
+      - run: echo "${PASSWORD:0:1} ${PASSWORD#?}"
