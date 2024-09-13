@@ -30,7 +30,19 @@ failureなどは失敗した時に通知するといった処理でよく使わ�
 
 ### ステップ間のデータ共有
 
-GITHUB_OUTPUT環境変数を利用することで、ステップ間でデータを共有できる
+GITHUB_OUTPUT環境変数を利用することで、ステップ間でデータを共有できる。
 
 ```
+name: GITHUB_OUTPUT
+run-name: Run by @${{ github.actor }}
+on: push
+jobs:
+  share:
+    runs-on: ubuntu-latest
+    steps:
+      - id: source
+        run: echo "result=Hello" >> "${GITHUB_OUTPUT}"
+      - env:
+          RESULT: ${{ steps.source.outputs.result }}
+        run: echo "${RESULT}"
 ```
