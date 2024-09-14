@@ -65,3 +65,53 @@ jobs:
     steps:
       - run: sleep 20
 ```
+
+## Ch05
+
+### 複数ジョブの実行制御
+
+**並列実行**
+
+ジョブは基本的に並列で実行できる。ジョブを分割することで実行時間を短縮する事ができる。
+
+```parallel-jobs.yml
+name: Parallel jobs
+on: push
+jobs:
+  first:
+    runs-on: ubuntu-latest
+    steps:
+      - run: sleep 30 && echo "First job"
+  second:
+    runs-on: ubuntu-latest
+    steps:
+      - run: sleep 30 && echo "Second job"
+  third:
+    runs-on: ubuntu-latest
+    steps:
+      - run: sleep 30 && echo "Third job"
+```
+
+**逐次実行**
+
+依存関係がある場合などは逐次実行することもできる。逐次実行するためにはneedsを指定する。
+
+```
+name: Sequential jobs
+on: push
+jobs:
+  first:
+    runs-on: ubuntu-latest
+    steps:
+      - run: sleep 10 && echo "First job"
+  second:
+    runs-on: ubuntu-latest
+    needs: [first]
+    steps:
+      - run: sleep 10 && echo "second job"
+  third:
+    runs-on: ubuntu-latest
+    needs: [second]
+    steps:
+      - run: sleep 10 && echo "Third job"
+```
