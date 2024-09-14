@@ -1,11 +1,28 @@
 # github-learn-cicd
 
+## ch02
+
+### 手動実行
+
+workflow_dispatchを指定することで、手動実行が可能となる
+
+```manual.yml
+name: manual
+on:
+  workflow_dispatch
+jobs:
+  manual:
+    runs-on: ubuntu-latest
+  steps:
+    - run: echo Manual workflow!
+```
+
 ## ch03
 
 コンテキストを直接シェルコマンドへ埋め込むのはアンチパターン。
 以下のように中間環境変数を利用する
 
-```
+```intermediate-environment-variables.yml
 name: Intermediate environment variables
 on: push
 jobs:
@@ -96,7 +113,7 @@ jobs:
 
 依存関係がある場合などは逐次実行することもできる。逐次実行するためにはneedsを指定する。
 
-```
+```sequential-jobs.yml
 name: Sequential jobs
 on: push
 jobs:
@@ -115,3 +132,7 @@ jobs:
     steps:
       - run: sleep 10 && echo "Third job"
 ```
+
+### Environments
+
+テスト環境と本番環境などがある場合、Environmentsを利用することで、環境を分ける事ができる。
