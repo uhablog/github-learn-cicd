@@ -46,3 +46,22 @@ jobs:
           RESULT: ${{ steps.source.outputs.result }}
         run: echo "${RESULT}"
 ```
+
+## ch04
+
+### タイムアウト
+
+timeout-minitesを使うことで、分単位でタイムアウトを指定できる。ジョブレベル・ステップレベルどちらでも指定が可能。
+
+デフォルトタイムアウトは360分と非常に長い時間が設定されている。そのため基本的には全てのワークフローにタイムアウト時間を設定するべき。
+
+```timeout.yaml
+name: Timeout
+on: push
+jobs:
+  sleep:
+    runs-on: ubuntu-latest
+    timeout-minites: 1
+    steps:
+      - run: sleep 20
+```
