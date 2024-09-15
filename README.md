@@ -1,11 +1,28 @@
 # github-learn-cicd
 
+## ch02
+
+### 手動実行
+
+workflow_dispatchを指定することで、手動実行が可能となる
+
+```manual.yml
+name: manual
+on:
+  workflow_dispatch
+jobs:
+  manual:
+    runs-on: ubuntu-latest
+  steps:
+    - run: echo Manual workflow!
+```
+
 ## ch03
 
 コンテキストを直接シェルコマンドへ埋め込むのはアンチパターン。
 以下のように中間環境変数を利用する
 
-```
+```intermediate-environment-variables.yml
 name: Intermediate environment variables
 on: push
 jobs:
@@ -65,3 +82,57 @@ jobs:
     steps:
       - run: sleep 20
 ```
+
+## Ch05
+
+### 複数ジョブの実行制御
+
+**並列実行**
+
+ジョブは基本的に並列で実行できる。ジョブを分割することで実行時間を短縮する事ができる。
+
+```parallel-jobs.yml
+name: Parallel jobs
+on: push
+jobs:
+  first:
+    runs-on: ubuntu-latest
+    steps:
+      - run: sleep 30 && echo "First job"
+  second:
+    runs-on: ubuntu-latest
+    steps:
+      - run: sleep 30 && echo "Second job"
+  third:
+    runs-on: ubuntu-latest
+    steps:
+      - run: sleep 30 && echo "Third job"
+```
+
+**逐次実行**
+
+依存関係がある場合などは逐次実行することもできる。逐次実行するためにはneedsを指定する。
+
+```sequential-jobs.yml
+name: Sequential jobs
+on: push
+jobs:
+  first:
+    runs-on: ubuntu-latest
+    steps:
+      - run: sleep 10 && echo "First job"
+  second:
+    runs-on: ubuntu-latest
+    needs: [first]
+    steps:
+      - run: sleep 10 && echo "second job"
+  third:
+    runs-on: ubuntu-latest
+    needs: [second]
+    steps:
+      - run: sleep 10 && echo "Third job"
+```
+
+### Environments
+
+テスト環境と本番環境などがある場合、Environmentsを利用することで、環境を分ける事ができる。
